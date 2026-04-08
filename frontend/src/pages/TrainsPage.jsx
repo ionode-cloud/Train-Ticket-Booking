@@ -4,7 +4,7 @@ import axios from 'axios';
 import BookingModal from '../components/BookingModal';
 import { useToast } from '../components/Toast';
 
-const API = 'http://localhost:5000/api';
+const API = 'https://train-ticket-booking-uj88.onrender.com/api';
 
 const getBadgeClass = (type) => {
   const map = {
