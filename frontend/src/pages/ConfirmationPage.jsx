@@ -297,6 +297,7 @@ export default function ConfirmationPage() {
   const [booking,     setBooking]     = useState(location.state?.booking || null);
   const [verifying,   setVerifying]   = useState(false);
   const [errorStatus, setErrorStatus] = useState(null);
+  const [countdown,   setCountdown]   = useState(null); // null = not started
 
   useEffect(() => {
     const orderId = searchParams.get('order_id');
@@ -319,6 +320,22 @@ export default function ConfirmationPage() {
       navigate('/', { replace: true });
     }
   }, [booking, searchParams, navigate]);
+
+  // ── Countdown timer after bill download ──
+  useEffect(() => {
+    if (countdown === null) return;
+    if (countdown === 0) {
+      navigate('/', { replace: true });
+      return;
+    }
+    const timer = setTimeout(() => setCountdown(c => c - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [countdown, navigate]);
+
+  const handleDownloadBill = () => {
+    generateBillPDF(booking);
+    setCountdown(10); // start 10-second redirect countdown
+  };
 
   // ── Loading ──
   if (verifying) {
@@ -556,6 +573,44 @@ export default function ConfirmationPage() {
             </p>
           </div>
 
+          {/* Countdown Banner */}
+          {countdown !== null && (
+            <div style={{
+              margin: '16px 0 8px',
+              padding: '14px 20px',
+              background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
+              borderRadius: '12px',
+              border: '2px solid #ff6b35',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '12px',
+              animation: 'pulse 1s infinite'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '22px' }}>✅</span>
+                <div>
+                  <div style={{ color: '#fff', fontWeight: 700, fontSize: '13px' }}>Bill downloaded successfully!</div>
+                  <div style={{ color: '#a0aec0', fontSize: '12px', marginTop: '2px' }}>Redirecting to home page...</div>
+                </div>
+              </div>
+              <div style={{
+                minWidth: '52px',
+                height: '52px',
+                borderRadius: '50%',
+                background: '#ff6b35',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <span style={{ color: '#fff', fontSize: '20px', fontWeight: 800, lineHeight: 1 }}>{countdown}</span>
+                <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: '9px', marginTop: '1px' }}>sec</span>
+              </div>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="bp-actions" style={{ flexWrap: 'wrap' }}>
             <button className="bp-action-btn primary" onClick={() => window.print()} id="print-ticket-btn">
@@ -564,7 +619,7 @@ export default function ConfirmationPage() {
             <button
               className="bp-action-btn secondary"
               id="download-bill-btn"
-              onClick={() => generateBillPDF(booking)}
+              onClick={handleDownloadBill}
               style={{ background: 'linear-gradient(135deg, #16a34a, #15803d)', color: '#fff', border: 'none' }}
             >
               📄 Download Bill PDF
