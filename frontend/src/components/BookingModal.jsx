@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import axios from 'axios';
 import { useToast } from './Toast';
 
-const API = 'https://train-ticket-booking-uj88.onrender.com/api';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const validate = (form, seats, pricePerSeat) => {
   const errors = {};

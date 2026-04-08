@@ -5,27 +5,27 @@
 ---
 
 ## 1. Fetch All Trains (GET)
-Use this to retrieve the list of available trains. You can also filter them.
+Use this to retrieve the list of available trains. You can also filter them using Query Parameters.
 
 * **Method:** `GET`
 * **URL:** `http://localhost:5000/api/trains`
 * **Options:** You can add query parameters to filter (e.g., `?source=New Delhi&destination=Mumbai Central`)
-* **Postman Steps:**
-  1. Open Postman and select **GET**.
+* **How to send data in Postman:**
+  1. Open Postman and select **GET** from the dropdown.
   2. Paste the URL.
   3. Click **Send**.
 
 ---
 
 ## 2. Add a New Train (POST)
-Use this to add a new train to the database.
+Use this to add a new train to the database. You will send data using a JSON Body.
 
 * **Method:** `POST`
 * **URL:** `http://localhost:5000/api/trains`
-* **Postman Steps:**
+* **How to send data in Postman:**
   1. Select **POST** and paste the URL.
-  2. Go to the **Body** tab, select **raw**, and choose **JSON** from the dropdown.
-  3. Enter the following data and click **Send**:
+  2. Go to the **Body** tab, select the **raw** radio button, and choose **JSON** from the dropdown menu to the right.
+  3. Enter the following data in the text area and click **Send**:
 ```json
 {
   "trainName": "Vande Bharat Express",
@@ -49,13 +49,13 @@ Use this to add a new train to the database.
 ---
 
 ## 3. Update an Existing Train (PUT)
-Use this if you want to update train details like price or schedule.
+Use this if you want to update train details like price or schedule. You will send Data using a JSON Body.
 
 * **Method:** `PUT`
 * **URL:** `http://localhost:5000/api/trains/[TRAIN_ID_HERE]` *(Replace with actual MongoDB _id)*
-* **Postman Steps:**
+* **How to send data in Postman:**
   1. Select **PUT** and paste the URL containing the specific Train ID.
-  2. Go to the **Body** tab, select **raw**, and choose **JSON**.
+  2. Go to the **Body** tab, select the **raw** radio button, and choose **JSON** from the right dropdown.
   3. Enter the fields you want to update and click **Send**:
 ```json
 {
@@ -71,22 +71,22 @@ Use this to remove a train entirely.
 
 * **Method:** `DELETE`
 * **URL:** `http://localhost:5000/api/trains/[TRAIN_ID_HERE]` *(Replace with actual MongoDB _id)*
-* **Postman Steps:**
-  1. Select **DELETE**.
+* **How to send data in Postman:**
+  1. Select **DELETE** from the HTTP method dropdown.
   2. Paste the URL containing the Train ID you want to delete.
   3. Click **Send**.
 
 ---
 
 ## 5. Book a Ticket (POST)
-Use this to simulate a user booking a ticket with the new multiple passengers feature.
+Use this to simulate a user booking a ticket with the new multiple passengers feature. You will send data using a JSON Body.
 
 * **Method:** `POST`
 * **URL:** `http://localhost:5000/api/book-ticket`
-* **Postman Steps:**
+* **How to send data in Postman:**
   1. Select **POST** and paste the URL.
-  2. Go to the **Body** tab, select **raw**, and choose **JSON**.
-  3. Paste the following data *(Make sure to use a valid Train ID!)* and click **Send**:
+  2. Go to the **Body** tab, select the **raw** radio button, and choose **JSON** from the right dropdown.
+  3. Paste the following data *(Make sure to use a valid Train ID!)* in the text area and click **Send**:
 ```json
 {
   "trainId": "REPLACE_WITH_VALID_TRAIN_ID",

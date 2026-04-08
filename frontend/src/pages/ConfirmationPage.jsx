@@ -43,7 +43,7 @@ export default function ConfirmationPage() {
     const orderId = searchParams.get('order_id');
     if (!booking && orderId) {
       setVerifying(true);
-      axios.post('https://train-ticket-booking-uj88.onrender.com/api/verify-payment', { order_id: orderId })
+      axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/verify-payment`, { order_id: orderId })
         .then(res => {
           if (res.data.success) {
             setBooking(res.data.booking);

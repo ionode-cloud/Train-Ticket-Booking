@@ -138,9 +138,8 @@ router.post('/book-ticket', async (req, res) => {
           customer_name: passengers[0].name
         },
         order_meta: {
-          // Setting the return URL so Cashfree redirects back to our frontend Confirmation (or wait, verification route)
-          // We will point it to a frontend verification page or simple confirmation
-          return_url: `https://train-ticket-booking-nu.vercel.app/confirmation?order_id=${orderId}&session_id={payment_session_id}`
+          // Setting the return URL so Cashfree redirects back to our frontend Confirmation
+          return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/confirmation?order_id=${orderId}&session_id={payment_session_id}`
         }
       }, {
         headers: {
