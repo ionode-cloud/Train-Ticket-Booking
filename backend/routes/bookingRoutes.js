@@ -140,7 +140,7 @@ router.post('/book-ticket', async (req, res) => {
         order_meta: {
           // Cashfree redirects back to our frontend after payment
           // Note: only order_id is used – no {payment_session_id} placeholder to avoid URL-encoding issues
-          return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/confirmation?order_id=${orderId}`
+          return_url: `${process.env.FRONTEND_URL || 'https://train-ticket-booking-uj88.onrender.com'}/confirmation?order_id=${orderId}`
         }
       }, {
         headers: {
