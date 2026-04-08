@@ -111,12 +111,22 @@ export default function BookingModal({ train, onClose, onSuccess }) {
 
       if (res.data.payment_session_id) {
         addToast('Initiating payment gateway...', 'info');
+        const orderId = res.data.order_id;
         const cashfree = window.Cashfree({ mode: "sandbox" });
         cashfree.checkout({
           paymentSessionId: res.data.payment_session_id,
-          redirectTarget: "_self"
+          redirectTarget: "_modal",
+          onSuccess: function() {
+            // Redirect to confirmation page on successful payment
+            window.location.href = `/confirmation?order_id=${orderId}`;
+          },
+          onFailure: function() {
+            addToast('Payment failed or was cancelled. Please try again.', 'error');
+            submitLock.current = false;
+            setLoading(false);
+          }
         });
-        return; // Halt here since we redirect to payment
+        return; // Halt here since payment modal is open
       }
 
       // Fallback

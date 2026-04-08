@@ -138,8 +138,9 @@ router.post('/book-ticket', async (req, res) => {
           customer_name: passengers[0].name
         },
         order_meta: {
-          // Setting the return URL so Cashfree redirects back to our frontend Confirmation
-          return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/confirmation?order_id=${orderId}&session_id={payment_session_id}`
+          // Cashfree redirects back to our frontend after payment
+          // Note: only order_id is used – no {payment_session_id} placeholder to avoid URL-encoding issues
+          return_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/confirmation?order_id=${orderId}`
         }
       }, {
         headers: {
