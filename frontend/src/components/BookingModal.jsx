@@ -130,7 +130,7 @@ export default function BookingModal({ train, onClose, onSuccess }) {
       }
 
       // Fallback
-      addToast('🎉 Ticket booked successfully! Check your email.', 'success');
+      addToast('🎉 Ticket booked successfully! Generating PDF...', 'success');
       onSuccess(res.data.booking);
     } catch (err) {
       const msg = err.response?.data?.message ||
@@ -158,7 +158,7 @@ export default function BookingModal({ train, onClose, onSuccess }) {
           <div className="loading-card">
             <span className="loading-train">🚂</span>
             <div className="loading-text">Booking your ticket...</div>
-            <div className="loading-subtext">Securing your seat & sending email</div>
+            <div className="loading-subtext">Securing your seat...</div>
             <div className="loading-dots">
               <div className="loading-dot" />
               <div className="loading-dot" />
@@ -387,7 +387,7 @@ export default function BookingModal({ train, onClose, onSuccess }) {
               color: '#6b7280',
               marginTop: '12px'
             }}>
-              🔒 Secure booking · Ticket will be emailed instantly
+              🔒 Secure booking · PDF ticket will be downloaded instantly
             </p>
           </form>
         </div>
