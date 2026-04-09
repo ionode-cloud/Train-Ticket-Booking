@@ -232,8 +232,7 @@ router.post('/verify-payment', async (req, res) => {
         console.error('Error saving to ticket.json:', fsErr);
       }
 
-      // Send email
-      sendTicketEmail(booking.toObject()).catch(err => console.error('Email sending failed:', err));
+      // Removed: sendTicketEmail(booking.toObject()).catch(...)
 
       return res.json({ success: true, message: 'Payment successful, ticket confirmed!', booking });
     } else {

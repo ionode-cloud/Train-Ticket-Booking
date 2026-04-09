@@ -147,7 +147,7 @@ export default function HomePage() {
             }}>
               {[
                 { icon: '✅', text: 'Instant Confirmation' },
-                { icon: '📧', text: 'Email Ticket' },
+                { icon: '📄', text: 'Direct Download PDF' },
                 { icon: '🪑', text: 'Real-time Availability' },
               ].map((f, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '13px', color: '#6b7280', fontWeight: 500 }}>
@@ -205,7 +205,7 @@ export default function HomePage() {
             {[
               { step: '01', icon: '🔍', title: 'Search Trains', desc: 'Enter your source and destination to find available trains.' },
               { step: '02', icon: '📝', title: 'Fill Details', desc: 'Enter passenger info and select number of seats.' },
-              { step: '03', icon: '🎫', title: 'Get Ticket', desc: 'Instant ticket confirmation sent to your email.' },
+              { step: '03', icon: '🎫', title: 'Get Ticket', desc: 'Instant ticket confirmation with auto-downloaded PDF bill.' },
             ].map((item, i) => (
               <div key={i} className="how-card">
                 <div className="how-step-num">{item.step}</div>

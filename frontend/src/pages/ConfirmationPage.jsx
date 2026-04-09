@@ -416,7 +416,6 @@ export default function ConfirmationPage() {
           <div className="success-icon">✓</div>
           <h1 className="confirmation-title">Booking Confirmed!</h1>
           <p className="confirmation-subtitle">Your ticket has been booked successfully</p>
-          <div className="email-notice">📧 Ticket sent to {booking.email}</div>
         </div>
 
         {/* ── Boarding Pass ── */}
