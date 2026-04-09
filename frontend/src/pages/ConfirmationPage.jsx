@@ -298,6 +298,7 @@ export default function ConfirmationPage() {
   const [verifying,   setVerifying]   = useState(false);
   const [errorStatus, setErrorStatus] = useState(null);
   const [countdown,   setCountdown]   = useState(null); // null = not started
+  const [hasAutoDownloaded, setHasAutoDownloaded] = useState(false); // track auto download
 
   useEffect(() => {
     const orderId = searchParams.get('order_id');
@@ -321,6 +322,15 @@ export default function ConfirmationPage() {
     }
   }, [booking, searchParams, navigate]);
 
+  // ── Auto download bill after payment success ──
+  useEffect(() => {
+    // Only auto-download if we arrived via Cashfree redirect (has order_id)
+    if (booking && searchParams.get('order_id') && !hasAutoDownloaded) {
+      setHasAutoDownloaded(true);
+      handleDownloadBill();
+    }
+  }, [booking, searchParams, hasAutoDownloaded]);
+
   // ── Countdown timer after bill download ──
   useEffect(() => {
     if (countdown === null) return;
@@ -333,8 +343,10 @@ export default function ConfirmationPage() {
   }, [countdown, navigate]);
 
   const handleDownloadBill = () => {
-    generateBillPDF(booking);
-    setCountdown(10); // start 10-second redirect countdown
+    if (booking) {
+      generateBillPDF(booking);
+      setCountdown(10); // start 10-second redirect countdown
+    }
   };
 
   // ── Loading ──
