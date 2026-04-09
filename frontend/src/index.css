@@ -445,6 +445,58 @@ body {
 .trains-meta { font-size: 13px; color: rgba(255,255,255,0.45); }
 .trains-meta span { color: var(--primary); font-weight: 600; }
 
+/* Round Trip Tabs */
+.trip-tabs {
+  max-width: 1100px;
+  margin: 20px auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.trip-tab {
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: left;
+  color: #fff;
+}
+.trip-tab:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.2);
+}
+.trip-tab.active {
+  background: var(--bg-white);
+  border-color: var(--primary);
+  color: var(--text-dark);
+  box-shadow: var(--shadow-md);
+}
+.tab-icon {
+  font-size: 24px;
+  filter: grayscale(1);
+  transition: var(--transition);
+}
+.trip-tab.active .tab-icon { filter: grayscale(0); }
+.tab-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 2px;
+}
+.trip-tab.active .tab-label { color: var(--text-light); }
+.tab-route {
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
 /* Date selector row (Speed Rail style) */
 .date-strip {
   background: var(--dark-mid);

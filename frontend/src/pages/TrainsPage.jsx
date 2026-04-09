@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import BookingModal from '../components/BookingModal';
@@ -157,11 +157,30 @@ export default function TrainsPage() {
   const [sortBy, setSortBy]           = useState('departure_asc');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const dateStrip  = buildDateStrip();
-  const [activeDateIdx, setActiveDateIdx] = useState(0);
+  const tripType    = searchParams.get('tripType')    || 'one-way';
+  const initialDate = searchParams.get('date')        || new Date().toISOString().split('T')[0];
+  const returnDate  = searchParams.get('returnDate')  || '';
+  
+  const [activeTab, setActiveTab] = useState('onward'); // 'onward' or 'return'
+  
+  // Create date strip and find the index for the initial date
+  const dateStrip = useMemo(() => buildDateStrip(), []);
+  const initialIdx = dateStrip.findIndex(d => d.iso === (activeTab === 'onward' ? initialDate : returnDate));
+  const [activeDateIdx, setActiveDateIdx] = useState(initialIdx !== -1 ? initialIdx : 0);
 
-  const source      = searchParams.get('source')      || '';
-  const destination = searchParams.get('destination') || '';
+  // Update activeDateIdx when tab changes
+  useEffect(() => {
+    const targetDate = activeTab === 'onward' ? initialDate : returnDate;
+    const newIdx = dateStrip.findIndex(d => d.iso === targetDate);
+    if (newIdx !== -1) setActiveDateIdx(newIdx);
+  }, [activeTab, initialDate, returnDate, dateStrip]);
+
+  const rawSource      = searchParams.get('source')      || '';
+  const rawDestination = searchParams.get('destination') || '';
+
+  // Effective source/destination depends on the active tab for round trips
+  const source      = activeTab === 'onward' ? rawSource      : rawDestination;
+  const destination = activeTab === 'onward' ? rawDestination : rawSource;
 
   const fetchTrains = useCallback(async () => {
     setLoading(true);
@@ -180,7 +199,9 @@ export default function TrainsPage() {
     }
   }, [source, destination, sortBy, addToast]);
 
-  useEffect(() => { fetchTrains(); }, [fetchTrains]);
+  useEffect(() => {
+    fetchTrains();
+  }, [fetchTrains]);
 
   const handleBookingSuccess = (booking) => {
     setSelectedTrain(null);
@@ -220,6 +241,32 @@ export default function TrainsPage() {
             {destination && ` to ${destination}`}
           </div>
         </div>
+
+        {/* ── Round Trip Tabs ── */}
+        {tripType === 'round-trip' && (
+          <div className="trip-tabs">
+            <button 
+              className={`trip-tab ${activeTab === 'onward' ? 'active' : ''}`}
+              onClick={() => setActiveTab('onward')}
+            >
+              <span className="tab-icon">🛫</span>
+              <div className="tab-info">
+                <div className="tab-label">Onward Trip</div>
+                <div className="tab-route">{rawSource} → {rawDestination}</div>
+              </div>
+            </button>
+            <button 
+              className={`trip-tab ${activeTab === 'return' ? 'active' : ''}`}
+              onClick={() => setActiveTab('return')}
+            >
+              <span className="tab-icon">🛬</span>
+              <div className="tab-info">
+                <div className="tab-label">Return Trip</div>
+                <div className="tab-route">{rawDestination} → {rawSource}</div>
+              </div>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Date strip (Speed Rail style) ── */}

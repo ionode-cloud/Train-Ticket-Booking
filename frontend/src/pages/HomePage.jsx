@@ -1,17 +1,42 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
+const API = import.meta.env.VITE_API_URL || 'https://train-ticket-booking-uj88.onrender.com/api';
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [tripType, setTripType] = useState('one-way');
+  const [departureDate, setDepartureDate] = useState(new Date().toISOString().split('T')[0]);
+  const [returnDate, setReturnDate] = useState('');
+  const [stations, setStations] = useState([]);
+
+  useEffect(() => {
+    // Fetch all trains to extract unique stations for the dropdown
+    axios.get(`${API}/trains`)
+      .then(res => {
+        const uniqueStations = new Set();
+        (res.data.trains || []).forEach(t => {
+          uniqueStations.add(t.source);
+          uniqueStations.add(t.destination);
+        });
+        setStations(Array.from(uniqueStations).sort());
+      })
+      .catch(err => console.error('Error fetching stations:', err));
+  }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (from.trim()) params.set('source', from.trim());
     if (to.trim()) params.set('destination', to.trim());
+    params.set('tripType', tripType);
+    params.set('date', departureDate);
+    if (tripType === 'round-trip' && returnDate) {
+      params.set('returnDate', returnDate);
+    }
     navigate(`/trains?${params.toString()}`);
   };
 
@@ -90,6 +115,7 @@ export default function HomePage() {
                   value={from}
                   onChange={e => setFrom(e.target.value)}
                   id="search-from"
+                  list="stations-list"
                 />
               </div>
 
@@ -103,6 +129,7 @@ export default function HomePage() {
                     onChange={e => setTo(e.target.value)}
                     id="search-to"
                     style={{ flex: 1 }}
+                    list="stations-list"
                   />
                   <button
                     type="button"
@@ -130,8 +157,28 @@ export default function HomePage() {
                   min={new Date().toISOString().split('T')[0]}
                   id="search-date"
                   style={{ colorScheme: 'light' }}
+                  value={departureDate}
+                  onChange={e => setDepartureDate(e.target.value)}
                 />
               </div>
+
+              {tripType === 'round-trip' && (
+                <div className="search-field">
+                  <label>Return Date</label>
+                  <input
+                    type="date"
+                    min={departureDate}
+                    id="search-return-date"
+                    style={{ colorScheme: 'light' }}
+                    value={returnDate}
+                    onChange={e => setReturnDate(e.target.value)}
+                  />
+                </div>
+              )}
+
+              <datalist id="stations-list">
+                {stations.map(s => <option key={s} value={s} />)}
+              </datalist>
 
               <button type="submit" className="search-btn" id="search-submit-btn">
                 <span>🔍</span> Search Trains
