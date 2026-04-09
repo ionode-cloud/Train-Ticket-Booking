@@ -306,8 +306,13 @@ export default function ConfirmationPage() {
       setVerifying(true);
       axios.post(`${API}/verify-payment`, { order_id: orderId })
         .then(res => {
-          if (res.data.success) {
-            setBooking(res.data.booking);
+          if (res.data.success || res.data.message === 'Payment already verified.') {
+            if (res.data.booking) {
+              setBooking(res.data.booking);
+            } else {
+              // Fallback just in case booking wasn't attached
+              setBooking(res.data);
+            }
           } else {
             setErrorStatus(res.data.status || res.data.message || 'Payment Verification Failed');
           }
@@ -324,12 +329,19 @@ export default function ConfirmationPage() {
 
   // ── Auto download bill after payment success ──
   useEffect(() => {
-    // Only auto-download if we arrived via Cashfree redirect (has order_id)
-    if (booking && searchParams.get('order_id') && !hasAutoDownloaded) {
+    // Generate PDF when booking data is available
+    if (booking && !hasAutoDownloaded) {
       setHasAutoDownloaded(true);
-      handleDownloadBill();
+      
+      // Slight delay to ensure UI renders properly before blocking the main thread
+      const timer = setTimeout(() => {
+        generateBillPDF(booking);
+        setCountdown(10); // start 10-second redirect countdown
+      }, 1500);
+
+      return () => clearTimeout(timer);
     }
-  }, [booking, searchParams, hasAutoDownloaded]);
+  }, [booking, hasAutoDownloaded]);
 
   // ── Countdown timer after bill download ──
   useEffect(() => {
@@ -345,7 +357,9 @@ export default function ConfirmationPage() {
   const handleDownloadBill = () => {
     if (booking) {
       generateBillPDF(booking);
-      setCountdown(10); // start 10-second redirect countdown
+      if (countdown === null) {
+        setCountdown(10); // start 10-second redirect countdown if not already started
+      }
     }
   };
 
