@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API = import.meta.env.VITE_API_URL || 'https://train-ticket-booking-uj88.onrender.com/api';
+const API = import.meta.env.VITE_API_URL;
 
 export default function HomePage() {
   const navigate = useNavigate();

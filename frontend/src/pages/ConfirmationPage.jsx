@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
 
-const API = import.meta.env.VITE_API_URL || 'https://train-ticket-booking-uj88.onrender.com/api';
+const API = import.meta.env.VITE_API_URL;
 
 // ─── Barcode Graphic ──────────────────────────────────────────────────────────
 function BarcodeGraphic({ ticketId }) {
